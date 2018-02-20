@@ -14,6 +14,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('/user-permissions', ['uses' => 'Auth\AuthController@getUserPermissions','as' => 'auth.getUserPermissions']);
         Route::post('/user', ['uses' => 'Auth\AuthController@editUser','as' => 'auth.editUser']);
         Route::post('/user-password', ['uses' => 'Auth\AuthController@editUserPassword','as' => 'auth.editUserPassword']);
+        Route::post('/refresh-token', ['uses' => 'Auth\AuthController@refreshToken','as' => 'auth.refreshToken']);
     });
 
 });
@@ -48,10 +49,12 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::post('/tasks/multiple-update', 'Crm\TasksController@multipleUpdate');
         //multiple delete
         Route::post('/position-tasks/multiple-delete', 'Crm\PositionTasksController@multipleDelete');
+        //multiple add
+        Route::post('/position-tasks/multiple-add', 'Crm\PositionTasksController@multipleAdd');
         // custom
         Route::get('/positions/{id}/tasks', ['uses' => 'Crm\PositionsController@positionTasks', 'as' => 'crmPositions.positionTasks']);
     });
-    
+
     //  Permission - ADMIN
     Route::group(['prefix' => 'admin', 'middleware' => ['permission:ADMIN']], function () {
         Route::apiResource('/users', 'Admin\UsersController');
@@ -62,6 +65,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::post('/permissions/multiple-update', 'Admin\PermissionsController@multipleUpdate');
         //multiple delete
         Route::post('/user-permissions/multiple-delete', 'Admin\UserPermissionsController@multipleDelete');
+        //multiple add
+        Route::post('/user-permissions/multiple-add', 'Admin\UserPermissionsController@multipleAdd');
         // custom
         Route::put('/users/{id}/reset-password', ['uses' => 'Admin\UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
         Route::get('/users/{id}/permissions', ['uses' => 'Admin\UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);

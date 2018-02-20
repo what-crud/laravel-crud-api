@@ -64,4 +64,10 @@ class UserPermissionsController extends Controller
 
         return ['status' => 0];
     }
+    public function multipleAdd(Request $request)
+    {
+        $items = $request->get('items');
+
+        UserPermission::insert($items);
+    }
 }

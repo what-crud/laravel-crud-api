@@ -72,4 +72,10 @@ class PositionTasksController extends Controller
 
         return ['status' => 0];
     }
+    public function multipleAdd(Request $request)
+    {
+        $items = $request->get('items');
+
+        PositionTask::insert($items);
+    }
 }
