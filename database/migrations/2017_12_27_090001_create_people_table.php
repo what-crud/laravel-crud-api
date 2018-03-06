@@ -19,9 +19,9 @@ class CreatePeopleTable extends Migration
             $table->string('lastname');
             $table->string('distinction')->nullable();
             $table->unique(['firstname', 'lastname', 'distinction']);
-            $table->integer('sex_id')->unsigned();
+            $table->integer('sex_id')->unsigned()->default(1);
             $table->foreign('sex_id')->references('id')->on('sexes');
-            $table->integer('language_id')->unsigned();
+            $table->integer('language_id')->unsigned()->default(1);
             $table->foreign('language_id')->references('id')->on('languages');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

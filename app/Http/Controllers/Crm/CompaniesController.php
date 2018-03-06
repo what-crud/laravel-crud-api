@@ -11,8 +11,8 @@ class CompaniesController extends Controller
 {
     public function index()
     {
-        return Company
-            ::orderBy('id', 'asc')
+        return Company            
+            ::orderBy('common_name', 'asc')
             ->with('companyType')
             ->with('streetPrefix')
             ->get();
@@ -41,6 +41,7 @@ class CompaniesController extends Controller
             ::where('id', $id)
             ->with('companyType')
             ->with('streetPrefix')
+            ->with('files')
             ->with('positions', 'positions.person')
             ->with('comments', 'comments.companyCommentType', 'comments.user')
             ->with(

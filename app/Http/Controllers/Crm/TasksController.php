@@ -11,7 +11,7 @@ class TasksController extends Controller
 {
     public function index()
     {
-        return Task::orderBy('id', 'asc')->get();
+        return Task::orderBy('name', 'asc')->get();
     }
     public function create()
     {

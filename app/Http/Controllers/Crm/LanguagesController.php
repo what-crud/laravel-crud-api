@@ -10,7 +10,7 @@ class LanguagesController extends Controller
 {
     public function index()
     {
-        return Language::orderBy('id', 'asc')->get();
+        return Language::orderBy('name', 'asc')->get();
     }
     public function create()
     {

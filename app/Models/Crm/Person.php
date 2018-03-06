@@ -24,7 +24,7 @@ class Person extends Model
     
     public function getFullnameAttribute()
     {
-        return $this->firstname." ".$this->lastname;
+        return $this->lastname." ".$this->firstname;
     }
 
     public function positions()

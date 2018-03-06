@@ -12,7 +12,9 @@ class PeopleController extends Controller
     public function index()
     {
         return Person
-            ::orderBy('id', 'asc')
+            ::orderBy('lastname', 'asc')
+            ->orderBy('firstname', 'asc')
+            ->orderBy('distinction', 'asc')
             ->with('language')
             ->with('sex')
             ->get();

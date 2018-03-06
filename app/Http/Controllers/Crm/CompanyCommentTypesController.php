@@ -11,7 +11,7 @@ class CompanyCommentTypesController extends Controller
 {
     public function index()
     {
-        return CompanyCommentType::orderBy('id', 'asc')->get();
+        return CompanyCommentType::orderBy('name', 'asc')->get();
     }
     public function create()
     {

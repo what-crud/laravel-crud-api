@@ -11,7 +11,7 @@ class PersonCommentTypesController extends Controller
 {
     public function index()
     {
-        return PersonCommentType::orderBy('id', 'asc')->get();
+        return PersonCommentType::orderBy('name', 'asc')->get();
     }
     public function create()
     {

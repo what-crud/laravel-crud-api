@@ -13,10 +13,17 @@ class PositionsController extends Controller
     public function index()
     {
         return Position
-            ::orderBy('id', 'asc')
+            ::join('companies', 'positions.company_id', '=', 'companies.id')
+            ->join('people', 'positions.person_id', '=', 'people.id')
+            ->orderBy('companies.common_name', 'asc')
+            ->orderBy('people.lastname', 'asc')
+            ->orderBy('people.firstname', 'asc')
+            ->select('positions.*')
             ->with('company')
             ->with('person')
-            ->get();
+            ->get()->sortBy(function ($product, $key) {
+                return $product['company']['name'];
+            });
     }
     public function create()
     {

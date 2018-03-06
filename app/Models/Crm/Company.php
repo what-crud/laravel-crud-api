@@ -7,6 +7,7 @@ use App\Models\Crm\CompanyType;
 use App\Models\Crm\StreetPrefix;
 use App\Models\Crm\Position;
 use App\Models\Crm\CompanyComment;
+use App\Models\Crm\CompanyFile;
 
 class Company extends Model
 {
@@ -76,5 +77,9 @@ class Company extends Model
     public function comments()
     {
         return $this->hasMany(CompanyComment::class)->orderBy('id', 'desc');
+    }
+    public function files()
+    {
+        return $this->hasMany(CompanyFile::class)->orderBy('id', 'desc');
     }
 }

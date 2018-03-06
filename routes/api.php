@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::apiResource('/street-prefixes', 'Crm\StreetPrefixesController');
         Route::apiResource('/sexes', 'Crm\SexesController');
         Route::apiResource('/languages', 'Crm\LanguagesController');
+        Route::apiResource('/company-files', 'Crm\CompanyFilesController');
+        Route::apiResource('/person-files', 'Crm\PersonFilesController');
         // multiple update
         Route::post('/companies/multiple-update', 'Crm\CompaniesController@multipleUpdate');
         Route::post('/people/multiple-update', 'Crm\PeopleController@multipleUpdate');
@@ -70,6 +72,12 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         // custom
         Route::put('/users/{id}/reset-password', ['uses' => 'Admin\UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
         Route::get('/users/{id}/permissions', ['uses' => 'Admin\UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);
+    });
+
+    // File management
+    Route::group(['prefix' => 'files'], function () {
+        // file upload
+        Route::post('/file-upload', 'Files\FileController@fileUpload');
     });
 });
 

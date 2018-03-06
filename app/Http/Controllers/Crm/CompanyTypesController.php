@@ -11,7 +11,7 @@ class CompanyTypesController extends Controller
 {
     public function index()
     {
-        return CompanyType::orderBy('id', 'asc')->get();
+        return CompanyType::orderBy('name', 'asc')->get();
     }
     public function create()
     {

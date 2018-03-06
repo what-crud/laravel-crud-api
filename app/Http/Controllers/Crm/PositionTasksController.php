@@ -12,7 +12,16 @@ class PositionTasksController extends Controller
 {
     public function index()
     {
-        return PositionTask::orderBy('id', 'asc')
+        return PositionTask
+            ::join('positions', 'positions.id', '=', 'position_tasks.position_id')
+            ->join('companies', 'positions.company_id', '=', 'companies.id')
+            ->join('people', 'positions.person_id', '=', 'people.id')
+            ->join('tasks', 'tasks.id', '=', 'position_tasks.task_id')
+            ->orderBy('tasks.name', 'asc')
+            ->orderBy('companies.common_name', 'asc')
+            ->orderBy('people.lastname', 'asc')
+            ->orderBy('people.firstname', 'asc')
+            ->select('position_tasks.*')
             ->with(
                 'position',
                 'task',

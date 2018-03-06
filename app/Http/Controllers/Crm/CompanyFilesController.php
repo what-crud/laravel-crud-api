@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\CompanyFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Validator;
 
 class CompanyFilesController extends Controller
 {
     public function index()
     {
         return CompanyFile
-            ::orderBy('id', 'asc')
+            ::orderBy('filename', 'asc')
             ->with('company')
             ->get();
     }
@@ -21,24 +22,20 @@ class CompanyFilesController extends Controller
     }
     public function store(Request $request)
     {
-        echo $request->get('files');
-        //$filePath = $request->get('files.file')->store('company-files');
-        // $validator = Validator::make($request->all(), [
-        //     'company_id' => 'required|exists:companies,id',
-        //     'original_filename' => 'required|string',
-        //     'description' => 'required|string|max:500',
-        // ]);
-        // if ($validator->fails()) {
-        //     return ['status' => -1, 'msg' => $validator->errors()];
-        // }
-        // $companyFile = [
-        //     'company_id' => $request->get('company_id'),
-        //     'filename' => $filePath,
-        //     'original_filename' => $request->get('company_comment_type_id'),
-        //     'description' => $request->get('description'),
-        // ];
-        // $result = CompanyFile::create($companyFile);
-        // return ['status' => 0, 'id' => $result->id];
+        $validator = Validator::make($request->all(), [
+            'company_id' => 'required|exists:companies,id',
+            'filename' => 'required|string',
+            'path' => 'required|string',
+            'size' => 'required|integer',
+            'mime' => 'required|string',
+            'description' => 'string|nullable',
+            'uploaded' => 'required|boolean',
+        ]);
+        if ($validator->fails()) {
+            return ['status' => -1, 'msg' => $validator->errors()];
+        }
+        $result = CompanyFile::create($request->all());
+        return ['status' => 0, 'id' => $result->id];
     }
     public function show(CompanyFile $companyFile)
     {
@@ -50,7 +47,21 @@ class CompanyFilesController extends Controller
     }
     public function update(Request $request, CompanyFile $companyFile)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'company_id' => 'exists:companies,id',
+            'filename' => 'string',
+            'path' => 'string',
+            'size' => 'integer',
+            'mime' => 'string',
+            'description' => 'string|nullable',
+            'uploaded' => 'boolean',
+            'active' => 'boolean',
+        ]);
+        if ($validator->fails()) {
+            return ['status' => -1, 'msg' => $validator->errors()];
+        }
+        $companyFile->update($request->all());
+        return ['status' => 0, 'id' => $companyFile->id];
     }
     public function destroy(CompanyFile $companyFile)
     {
