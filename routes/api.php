@@ -23,55 +23,57 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => ['auth.jwt']], function () {
 
     //  Permission - CRM
-    Route::group(['prefix' => 'crm', 'middleware' => ['permission:CRM']], function () {
-        Route::apiResource('/companies', 'Crm\CompaniesController');
-        Route::apiResource('/people', 'Crm\PeopleController');
-        Route::apiResource('/positions', 'Crm\PositionsController');
-        Route::apiResource('/company-comments', 'Crm\CompanyCommentsController');
-        Route::apiResource('/person-comments', 'Crm\PersonCommentsController');
-        Route::apiResource('/position-tasks', 'Crm\PositionTasksController');
-        Route::apiResource('/company-types', 'Crm\CompanyTypesController');
-        Route::apiResource('/company-comment-types', 'Crm\CompanyCommentTypesController');
-        Route::apiResource('/person-comment-types', 'Crm\PersonCommentTypesController');
-        Route::apiResource('/tasks', 'Crm\TasksController');
-        Route::apiResource('/street-prefixes', 'Crm\StreetPrefixesController');
-        Route::apiResource('/sexes', 'Crm\SexesController');
-        Route::apiResource('/languages', 'Crm\LanguagesController');
-        Route::apiResource('/company-files', 'Crm\CompanyFilesController');
-        Route::apiResource('/person-files', 'Crm\PersonFilesController');
+    Route::group(['prefix' => 'crm', 'middleware' => ['permission:CRM'], 'namespace' => 'Crm'], function () {
+        Route::apiResource('/companies', 'CompaniesController');
+        Route::apiResource('/people', 'PeopleController');
+        Route::apiResource('/positions', 'PositionsController');
+        Route::apiResource('/company-comments', 'CompanyCommentsController');
+        Route::apiResource('/person-comments', 'PersonCommentsController');
+        Route::apiResource('/position-tasks', 'PositionTasksController');
+        Route::apiResource('/company-types', 'CompanyTypesController');
+        Route::apiResource('/company-comment-types', 'CompanyCommentTypesController');
+        Route::apiResource('/person-comment-types', 'PersonCommentTypesController');
+        Route::apiResource('/tasks', 'TasksController');
+        Route::apiResource('/street-prefixes', 'StreetPrefixesController');
+        Route::apiResource('/sexes', 'SexesController');
+        Route::apiResource('/languages', 'LanguagesController');
+        Route::apiResource('/company-files', 'CompanyFilesController');
+        Route::apiResource('/person-files', 'PersonFilesController');
         // multiple update
-        Route::post('/companies/multiple-update', 'Crm\CompaniesController@multipleUpdate');
-        Route::post('/people/multiple-update', 'Crm\PeopleController@multipleUpdate');
-        Route::post('/positions/multiple-update', 'Crm\PositionsController@multipleUpdate');
-        Route::post('/company-comments/multiple-update', 'Crm\CompanyCommentsController@multipleUpdate');
-        Route::post('/person-comments/multiple-update', 'Crm\PersonCommentsController@multipleUpdate');
-        Route::post('/company-types/multiple-update', 'Crm\CompanyTypesController@multipleUpdate');
-        Route::post('/company-comment-types/multiple-update', 'Crm\CompanyCommentTypesController@multipleUpdate');
-        Route::post('/person-comment-types/multiple-update', 'Crm\PersonCommentTypesController@multipleUpdate');
-        Route::post('/tasks/multiple-update', 'Crm\TasksController@multipleUpdate');
+        Route::post('/companies/multiple-update', 'CompaniesController@multipleUpdate');
+        Route::post('/people/multiple-update', 'PeopleController@multipleUpdate');
+        Route::post('/positions/multiple-update', 'PositionsController@multipleUpdate');
+        Route::post('/company-comments/multiple-update', 'CompanyCommentsController@multipleUpdate');
+        Route::post('/person-comments/multiple-update', 'PersonCommentsController@multipleUpdate');
+        Route::post('/company-types/multiple-update', 'CompanyTypesController@multipleUpdate');
+        Route::post('/company-comment-types/multiple-update', 'CompanyCommentTypesController@multipleUpdate');
+        Route::post('/person-comment-types/multiple-update', 'PersonCommentTypesController@multipleUpdate');
+        Route::post('/tasks/multiple-update', 'TasksController@multipleUpdate');
         //multiple delete
-        Route::post('/position-tasks/multiple-delete', 'Crm\PositionTasksController@multipleDelete');
+        Route::post('/position-tasks/multiple-delete', 'PositionTasksController@multipleDelete');
         //multiple add
-        Route::post('/position-tasks/multiple-add', 'Crm\PositionTasksController@multipleAdd');
+        Route::post('/position-tasks/multiple-add', 'PositionTasksController@multipleAdd');
         // custom
-        Route::get('/positions/{id}/tasks', ['uses' => 'Crm\PositionsController@positionTasks', 'as' => 'crmPositions.positionTasks']);
+        Route::get('/positions/{id}/tasks', ['uses' => 'PositionsController@positionTasks', 'as' => 'crmPositions.positionTasks']);
+        //async-data
+        Route::post('/people/async-data', 'PeopleController@asyncData');
     });
 
     //  Permission - ADMIN
-    Route::group(['prefix' => 'admin', 'middleware' => ['permission:ADMIN']], function () {
-        Route::apiResource('/users', 'Admin\UsersController');
-        Route::apiResource('/permissions', 'Admin\PermissionsController');
-        Route::apiResource('/user-permissions', 'Admin\UserPermissionsController');
+    Route::group(['prefix' => 'admin', 'middleware' => ['permission:ADMIN'], 'namespace' => 'Admin'], function () {
+        Route::apiResource('/users', 'UsersController');
+        Route::apiResource('/permissions', 'PermissionsController');
+        Route::apiResource('/user-permissions', 'UserPermissionsController');
         // multiple update
-        Route::post('/users/multiple-update', 'Admin\UsersController@multipleUpdate');
-        Route::post('/permissions/multiple-update', 'Admin\PermissionsController@multipleUpdate');
+        Route::post('/users/multiple-update', 'UsersController@multipleUpdate');
+        Route::post('/permissions/multiple-update', 'PermissionsController@multipleUpdate');
         //multiple delete
-        Route::post('/user-permissions/multiple-delete', 'Admin\UserPermissionsController@multipleDelete');
+        Route::post('/user-permissions/multiple-delete', 'UserPermissionsController@multipleDelete');
         //multiple add
-        Route::post('/user-permissions/multiple-add', 'Admin\UserPermissionsController@multipleAdd');
+        Route::post('/user-permissions/multiple-add', 'UserPermissionsController@multipleAdd');
         // custom
-        Route::put('/users/{id}/reset-password', ['uses' => 'Admin\UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
-        Route::get('/users/{id}/permissions', ['uses' => 'Admin\UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);
+        Route::put('/users/{id}/reset-password', ['uses' => 'UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
+        Route::get('/users/{id}/permissions', ['uses' => 'UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);
     });
 
     // File management

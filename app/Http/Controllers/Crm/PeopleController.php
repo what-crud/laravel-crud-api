@@ -6,6 +6,8 @@ use App\Models\Crm\Person;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use Illuminate\Support\Facades\DB;
+use App\Libraries\ModelTreatment;
 
 class PeopleController extends Controller
 {
@@ -18,6 +20,36 @@ class PeopleController extends Controller
             ->with('language')
             ->with('sex')
             ->get();
+    }
+    public function asyncData(Request $request)
+    {
+        $columns = ['id', 'firstname', 'lastname', 'email', 'phone', 'sex', 'language'];
+
+        $model = Person
+        ::with('language')
+        ->with('sex')
+        ->leftJoin(
+            DB::raw("
+            (SELECT
+                id as sexes_id,
+                name as sex
+            FROM
+                sexes) s
+            "),
+            's.sexes_id', '=', 'people.sex_id'
+        )
+        ->leftJoin(
+            DB::raw("
+            (SELECT
+                id as languages_id,
+                name as language
+            FROM
+                languages) l
+            "),
+            'l.languages_id', '=', 'people.language_id'
+        );
+
+        return ModelTreatment::getAsyncData($model, $request, $columns, 'crm', 'people', 'lastname', 'ASC');
     }
     public function create()
     {

@@ -21,9 +21,7 @@ class PositionsController extends Controller
             ->select('positions.*')
             ->with('company')
             ->with('person')
-            ->get()->sortBy(function ($product, $key) {
-                return $product['company']['name'];
-            });
+            ->get();
     }
     public function create()
     {
