@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Crm\UserPermission;
+use App\Models\Crm\UserType;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'initial_password',
+        'user_type_id',
         'active'
     ];
 
@@ -35,5 +37,10 @@ class User extends Authenticatable
     public function userPermissions()
     {
         return $this->hasMany(UserPermission::class);
+    }
+
+    public function userType()
+    {
+        return $this->belongsTo(UserType::class, 'user_type_id');
     }
 }

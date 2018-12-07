@@ -9,12 +9,19 @@ use Validator;
 
 class CompaniesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:insert', ['only' => ['store']]);
+        $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
+        $this->middleware('role:delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
-        return Company            
-            ::orderBy('common_name', 'asc')
-            ->with('companyType')
+        return Company
+            ::with('companyType')
             ->with('streetPrefix')
+            ->orderBy('common_name', 'asc')
             ->get();
     }
     public function create()
@@ -29,7 +36,7 @@ class CompaniesController extends Controller
             'company_type_id' => 'required|exists:company_types,id',
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
         $result = Company::create($request->all());
         return ['status' => 0, 'id' => $result->id];
@@ -43,10 +50,14 @@ class CompaniesController extends Controller
             ->with('streetPrefix')
             ->with('files')
             ->with('positions', 'positions.person')
-            ->with('comments', 'comments.companyCommentType', 'comments.user')
+            ->with('positions.positionTasks.task')
+            ->with(
+                'comments.companyCommentType',
+                'comments.user'
+            )
             ->with(
                 ['comments' => function ($query) {
-                    $query->where('active', true);
+                    $query->orderBy('created_at', 'desc');
                 }],
                 'comments.companyCommentType',
                 'comments.user'
@@ -67,7 +78,7 @@ class CompaniesController extends Controller
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
         $company->update($request->all());
         return ['status' => 0, 'id' => $company->id];
@@ -84,7 +95,7 @@ class CompaniesController extends Controller
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
 
         Company

@@ -10,6 +10,13 @@ use Validator;
 
 class PositionsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:insert', ['only' => ['store']]);
+        $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
+        $this->middleware('role:delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         return Position
@@ -21,6 +28,7 @@ class PositionsController extends Controller
             ->select('positions.*')
             ->with('company')
             ->with('person')
+            ->with('positionTasks.task')
             ->get();
     }
     public function create()
@@ -41,7 +49,7 @@ class PositionsController extends Controller
             'comment' => 'string|max:500|nullable',
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
         $result = Position::create($request->all());
         return ['status' => 0, 'id' => $result->id];
@@ -68,14 +76,14 @@ class PositionsController extends Controller
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
         $position->update($request->all());
         return ['status' => 0, 'id' => $position->id];
     }
     public function destroy(Position $position)
     {
-        //
+        $position->delete();
     }
     public function positionTasks(Request $request, $id)
     {
@@ -99,7 +107,7 @@ class PositionsController extends Controller
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return ['status' => -2, 'msg' => $validator->errors()];
         }
 
         Position

@@ -12,8 +12,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => ['auth.jwt']], function () {
         Route::get('/user', ['uses' => 'Auth\AuthController@getUser','as' => 'auth.getUser']);
         Route::get('/user-permissions', ['uses' => 'Auth\AuthController@getUserPermissions','as' => 'auth.getUserPermissions']);
-        Route::post('/user', ['uses' => 'Auth\AuthController@editUser','as' => 'auth.editUser']);
-        Route::post('/user-password', ['uses' => 'Auth\AuthController@editUserPassword','as' => 'auth.editUserPassword']);
+        Route::post('/user', ['uses' => 'Auth\AuthController@editUser','as' => 'auth.editUser'])->middleware('role:update');
+        Route::post('/user-password', ['uses' => 'Auth\AuthController@editUserPassword','as' => 'auth.editUserPassword'])->middleware('role:update');
         Route::post('/refresh-token', ['uses' => 'Auth\AuthController@refreshToken','as' => 'auth.refreshToken']);
     });
 
@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::apiResource('/users', 'UsersController');
         Route::apiResource('/permissions', 'PermissionsController');
         Route::apiResource('/user-permissions', 'UserPermissionsController');
+        Route::apiResource('/user-types', 'UserTypesController');
         // multiple update
         Route::post('/users/multiple-update', 'UsersController@multipleUpdate');
         Route::post('/permissions/multiple-update', 'PermissionsController@multipleUpdate');

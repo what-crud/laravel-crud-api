@@ -11,9 +11,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:insert', ['only' => ['store']]);
+        $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
+        $this->middleware('role:delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
-        return User::orderBy('id', 'asc')->get();
+        return User::with('userType')->orderBy('id', 'asc')->get();
     }
     public function create()
     {
@@ -23,7 +31,8 @@ class UsersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|string'
+            'email' => 'required|string',
+            'user_type_id' => 'required|exists:user_types,id',
         ]);
         if ($validator->fails()) {
             return ['status' => -1, 'msg' => $validator->errors()];
@@ -34,6 +43,7 @@ class UsersController extends Controller
         $result = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
+            'user_type_id' => $request->get('user_type_id'),
             'initial_password' => $password,
             'password' => bcrypt($password)
           ]
@@ -53,6 +63,7 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'string',
             'email' => 'string',
+            'user_type_id' => 'exists:user_types,id',
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {

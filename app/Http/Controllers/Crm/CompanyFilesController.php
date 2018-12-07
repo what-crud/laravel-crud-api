@@ -9,6 +9,14 @@ use Validator;
 
 class CompanyFilesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:insert', ['only' => ['store']]);
+        $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
+        $this->middleware('role:delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         return CompanyFile

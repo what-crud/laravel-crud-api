@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Crm;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Crm\StreetPrefix;
+use App\Models\Crm\UserType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class StreetPrefixesController extends Controller
+class UserTypesController extends Controller
 {
     public function __construct()
     {
@@ -18,7 +18,7 @@ class StreetPrefixesController extends Controller
 
     public function index()
     {
-        return StreetPrefix::orderBy('id', 'asc')->get();
+        return UserType::orderBy('id', 'asc')->get();
     }
     public function create()
     {
@@ -28,19 +28,19 @@ class StreetPrefixesController extends Controller
     {
         //
     }
-    public function show(StreetPrefix $streetPrefix)
+    public function show(UserType $userType)
     {
         //
     }
-    public function edit(StreetPrefix $streetPrefix)
+    public function edit(UserType $userType)
     {
         //
     }
-    public function update(Request $request, StreetPrefix $streetPrefix)
+    public function update(Request $request, UserType $userType)
     {
         //
     }
-    public function destroy(StreetPrefix $streetPrefix)
+    public function destroy(UserType $userType)
     {
         //
     }
