@@ -22,6 +22,12 @@ Route::group(['prefix' => 'auth'], function () {
 //  Middleware - authentication
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+    // File management
+    Route::group(['prefix' => 'files'], function () {
+        // file upload
+        Route::post('/file-upload', 'Files\FileController@fileUpload');
+    });
+
     //  Permission - CRM
     Route::group(['prefix' => 'crm', 'middleware' => ['permission:CRM'], 'namespace' => 'Crm'], function () {
         Route::apiResource('/companies', 'CompaniesController');
@@ -75,12 +81,6 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         // custom
         Route::put('/users/{id}/reset-password', ['uses' => 'UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
         Route::get('/users/{id}/permissions', ['uses' => 'UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);
-    });
-
-    // File management
-    Route::group(['prefix' => 'files'], function () {
-        // file upload
-        Route::post('/file-upload', 'Files\FileController@fileUpload');
     });
 });
 

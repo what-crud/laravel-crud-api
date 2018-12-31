@@ -20,7 +20,7 @@ class CompanyFilesController extends Controller
     public function index()
     {
         return CompanyFile
-            ::orderBy('filename', 'asc')
+            ::orderBy('company_id', 'asc')
             ->with('company')
             ->get();
     }
@@ -32,12 +32,9 @@ class CompanyFilesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
-            'filename' => 'required|string',
-            'path' => 'required|string',
-            'size' => 'required|integer',
-            'mime' => 'required|string',
+            'file' => 'required|string',
+            'file_2' => 'string|nullable',
             'description' => 'string|nullable',
-            'uploaded' => 'required|boolean',
         ]);
         if ($validator->fails()) {
             return ['status' => -1, 'msg' => $validator->errors()];
@@ -57,12 +54,9 @@ class CompanyFilesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'company_id' => 'exists:companies,id',
-            'filename' => 'string',
-            'path' => 'string',
-            'size' => 'integer',
-            'mime' => 'string',
+            'file' => 'string',
+            'file_2' => 'string|nullable',
             'description' => 'string|nullable',
-            'uploaded' => 'boolean',
             'active' => 'boolean',
         ]);
         if ($validator->fails()) {

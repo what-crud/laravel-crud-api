@@ -9,11 +9,8 @@ class CompanyFile extends Model
 {
     protected $fillable = [
         'company_id',
-        'filename',
-        'path',
-        'mime',
-        'uploaded',
-        'size',
+        'file',
+        'file_2',
         'description',
         'active'
     ];

@@ -24,7 +24,7 @@ class FileController extends Controller
         $folder = $request->get('folder');
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
-        $uniqueFolder = $userId.'-'.time();
+        $uniqueFolder = time().substr("000000".$userId,-6);
         $permission = UserPermission
             ::whereHas('permission', function ($query) use ($module) {
                 $query->where('code', $module);
