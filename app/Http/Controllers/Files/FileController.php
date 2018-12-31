@@ -21,7 +21,8 @@ class FileController extends Controller
         }
 
         $userId = Auth::user()->id;
-        $folder = $request->get('folder');
+        $table = $request->get('table');
+        $field = $request->get('field');
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
         $uniqueFolder = time().substr("000000".$userId,-6);
@@ -32,8 +33,9 @@ class FileController extends Controller
             ->where('user_id', $userId)
             ->first();
         if ($permission !== null) {
-            $file->storeAs('public/files/'.$module.'/'.$folder.'/'.$uniqueFolder, $originalName);
-            return 'files/'.$module.'/'.$folder.'/'.$uniqueFolder;
+            $relativePath = 'files/'.$module.'/'.$table.'/'.$field.'/'.$uniqueFolder;
+            $file->storeAs('public/'.$relativePath, $originalName);
+            return $relativePath;
         }
         else {
             return ['status' => -1, 'msg' => ''];
