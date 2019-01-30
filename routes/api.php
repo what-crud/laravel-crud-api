@@ -61,8 +61,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::post('/position-tasks/multiple-add', 'PositionTasksController@multipleAdd');
         // custom
         Route::get('/positions/{id}/tasks', ['uses' => 'PositionsController@positionTasks', 'as' => 'crmPositions.positionTasks']);
-        //async-data
-        Route::post('/people/async-data', 'PeopleController@asyncData');
+        //search
+        Route::post('/people/search', 'PeopleController@search');
     });
 
     //  Permission - ADMIN

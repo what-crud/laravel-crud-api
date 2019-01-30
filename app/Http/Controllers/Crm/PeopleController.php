@@ -13,7 +13,7 @@ class PeopleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:read', ['only' => ['index', 'show', 'search']]);
         $this->middleware('role:insert', ['only' => ['store']]);
         $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
         $this->middleware('role:delete', ['only' => ['destroy']]);
@@ -29,7 +29,7 @@ class PeopleController extends Controller
             ->with('sex')
             ->get();
     }
-    public function asyncData(Request $request)
+    public function search(Request $request)
     {
         $columns = ['id', 'firstname', 'lastname', 'email', 'phone', 'sex', 'language'];
 
