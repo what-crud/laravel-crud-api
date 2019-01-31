@@ -52,22 +52,18 @@ class AuthController extends Controller
 
         $userId = JWTAuth::toUser($token)->id;
 
-        $user = User
-            ::where('id', '=', $userId)
-            ->with(
-                [
-                    'userPermissions' => function($query) {
-                        $query->where('active', true);
-                    },
-                    'userPermissions.permission'
-                ]
-            )
-            ->first();
+        $user = User::find($userId, ['name', 'email', 'active']);
+        $permissions = Permission
+            ::whereHas("permissionUsers", function($q){
+                $q->where("user_id", "=", 1);
+            })
+            ->pluck('code');
         
         if($user->active){
             return response()->json([
                 'token' => $token,
-                'user' => $user
+                'user' => $user,
+                'permissions' => $permissions
             ], 200);
         }
         else {
