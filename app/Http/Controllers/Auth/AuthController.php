@@ -54,8 +54,8 @@ class AuthController extends Controller
 
         $user = User::find($userId, ['name', 'email', 'active']);
         $permissions = Permission
-            ::whereHas("permissionUsers", function($q){
-                $q->where("user_id", "=", 1);
+            ::whereHas("permissionUsers", function($q) use ($userId){
+                $q->where("user_id", "=", $userId);
             })
             ->pluck('code');
         
