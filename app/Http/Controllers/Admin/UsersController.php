@@ -31,7 +31,7 @@ class UsersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|string',
+            'email' => 'required|string|unique:users,email',
             'user_type_id' => 'required|exists:user_types,id',
         ]);
         if ($validator->fails()) {
@@ -74,7 +74,7 @@ class UsersController extends Controller
     }
     public function destroy(User $user)
     {
-        
+        $user->delete();
     }
     // custom
     public function resetPassword(Request $request, $id)
