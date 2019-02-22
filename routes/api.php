@@ -19,6 +19,12 @@ Route::group(['prefix' => 'auth'], function () {
 
 });
 
+// Authentication and modifying authenticated user
+Route::group(['prefix' => 'demo', 'namespace' => 'Demo'], function () {
+    Route::apiResource('/tasks', 'TasksController');
+    Route::post('/tasks/multiple-update', 'TasksController@multipleUpdate');
+});
+
 //  Middleware - authentication
 Route::group(['middleware' => ['auth.jwt']], function () {
 
