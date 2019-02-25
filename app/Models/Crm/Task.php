@@ -7,7 +7,7 @@ use App\Models\Crm\PositionTask;
 
 class Task extends Model
 {
-    protected $fillable = ['name', 'active'];
+    protected $fillable = ['name', 'description', 'active'];
     
     public function taskPositions()
     {

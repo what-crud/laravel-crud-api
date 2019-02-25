@@ -29,6 +29,7 @@ class TasksController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:200',
+            'description' => 'string|max:500|nullable',
         ]);
         if ($validator->fails()) {
             return ['status' => -1, 'msg' => $validator->errors()];
@@ -48,6 +49,7 @@ class TasksController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:200',
+            'description' => 'string|max:500|nullable',
             'active' => 'boolean'
         ]);
         if ($validator->fails()) {
