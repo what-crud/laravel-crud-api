@@ -23,6 +23,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'demo', 'namespace' => 'Demo'], function () {
     Route::apiResource('/tasks', 'TasksController');
     Route::post('/tasks/multiple-update', 'TasksController@multipleUpdate');
+    Route::post('/tasks/multiple-delete', 'TasksController@multipleDelete');
 });
 
 //  Middleware - authentication

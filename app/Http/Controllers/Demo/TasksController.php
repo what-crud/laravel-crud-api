@@ -53,7 +53,8 @@ class TasksController extends Controller
     }
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return ['status' => 0];
     }
     public function multipleUpdate(Request $request)
     {
@@ -69,6 +70,16 @@ class TasksController extends Controller
         Task
             ::whereIn('id', $ids)
             ->update($request->get('request'));
+
+        return ['status' => 0];
+    }
+    public function multipleDelete(Request $request)
+    {
+        $ids = $request->get('ids');
+
+        Task
+            ::whereIn('id', $ids)
+            ->delete();
 
         return ['status' => 0];
     }
