@@ -2,8 +2,8 @@
 
 namespace App\Libraries;
 
-use App\Models\Crm\UserPermission;
-use App\Models\Crm\Permission;
+use App\Models\Admin\UserPermission;
+use App\Models\Admin\Permission;
 use Auth;
 
 trait UserPermissions

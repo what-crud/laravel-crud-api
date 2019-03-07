@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\User;
-use App\Models\Crm\UserType;
+use App\Models\Admin\User;
+use App\Models\Admin\UserType;
 
 class CheckRole
 {

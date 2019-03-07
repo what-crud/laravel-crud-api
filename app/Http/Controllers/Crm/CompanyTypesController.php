@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\CompanyType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class CompanyTypesController extends Controller
 {
@@ -17,66 +16,35 @@ class CompanyTypesController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = CompanyType::class;
+    private $pk = 'id';
+
     public function index()
     {
         return CompanyType::orderBy('name', 'asc')->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:200',
-            'code' => 'required|string|size:3'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = CompanyType::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(CompanyType $companyType)
+    public function show(CompanyType $model)
     {
-        return $companyType;
+        return $model;
     }
-    public function edit(CompanyType $companyType)
+    public function update(Request $request, CompanyType $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, CompanyType $companyType)
+    public function destroy(CompanyType $model)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:200',
-            'code' => 'string|size:3',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $companyType->update($request->all());
-        return ['status' => 0, 'id' => $companyType->id];
-    }
-    public function destroy(CompanyType $companyType)
-    {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        CompanyType
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

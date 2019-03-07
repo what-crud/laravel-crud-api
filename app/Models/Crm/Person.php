@@ -26,6 +26,17 @@ class Person extends Model
     {
         return $this->lastname." ".$this->firstname;
     }
+    
+    public static $validator = [
+        'firstname' => 'required|string',
+        'lastname' => 'required|string',
+        'distinction' => 'string|nullable',
+        'sex_id' => 'required|exists:sexes,id',
+        'language_id' => 'required|exists:languages,id',
+        'email' => 'string|nullable',
+        'phone' => 'string|nullable',
+        'active' => 'boolean'
+    ];
 
     public function positions()
     {

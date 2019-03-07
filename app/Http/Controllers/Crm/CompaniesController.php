@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class CompaniesController extends Controller
 {
@@ -16,6 +15,10 @@ class CompaniesController extends Controller
         $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
+
+    private $m = Company::class;
+    private $pk = 'id';
+
     public function index()
     {
         return Company
@@ -24,33 +27,20 @@ class CompaniesController extends Controller
             ->orderBy('common_name', 'asc')
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'common_name' => 'required|string|max:1000',
-            'company_type_id' => 'required|exists:company_types,id',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-        $result = Company::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(Company $company)
+    public function show(Company $model)
     {
-        $id = $company->id;
+        $id = $model->id;
         $companyInfo = Company
             ::where('id', $id)
             ->with('companyType')
             ->with('streetPrefix')
             ->with('files')
             ->with('positions', 'positions.person')
-            ->with('positions.positionTasks.task')
+            ->with('positions.positionCompanys.Company')
             ->with(
                 'comments.companyCommentType',
                 'comments.user'
@@ -65,43 +55,20 @@ class CompaniesController extends Controller
             ->first();
         return $companyInfo;
     }
-    public function edit(Company $company)
+    public function update(Request $request, Company $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, Company $company)
+    public function destroy(Company $model)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:1000',
-            'common_name' => 'string|max:1000',
-            'company_type_id' => 'exists:company_types,id',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-        $company->update($request->all());
-        return ['status' => 0, 'id' => $company->id];
-    }
-    public function destroy(Company $company)
-    {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-
-        Company
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

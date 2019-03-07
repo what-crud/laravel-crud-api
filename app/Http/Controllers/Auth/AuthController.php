@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Crm\UserPermission;
-use App\Models\Crm\Permission;
+use App\Models\Admin\User;
+use App\Models\Admin\UserPermission;
+use App\Models\Admin\Permission;
 use Auth;
 use Validator;
 

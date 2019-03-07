@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use App\Models\Crm\Permission;
+use App\Models\Admin\User;
+use App\Models\Admin\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
@@ -19,64 +18,42 @@ class UsersController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = User::class;
+    private $pk = 'id';
+
     public function index()
     {
         return User::with('userType')->orderBy('id', 'asc')->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'user_type_id' => 'required|exists:user_types,id',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
         $password = str_random(8);
 
-        $result = User::create([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'user_type_id' => $request->get('user_type_id'),
-            'initial_password' => $password,
+        $computed = [
             'password' => bcrypt($password)
-          ]
-        );
-        return ['status' => 0, 'id' => $result->id];
+        ];
+        return $this->rStore($this->m, $request, $this->pk, $computed);
     }
-    public function show(User $user)
+    public function show(User $model)
     {
-        return $user;
+        return $model;
     }
-    public function edit(User $user)
+    public function update(Request $request, User $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, User $user)
+    public function destroy(User $model)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string',
-            'email' => 'string',
-            'user_type_id' => 'exists:user_types,id',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $user->update($request->all());
-        return ['status' => 0, 'id' => $user->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(User $user)
+    public function multipleUpdate(Request $request)
     {
-        $user->delete();
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
     }
-    // custom
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
+    }
     public function resetPassword(Request $request, $id)
     {
         $user = User::find($id);
@@ -102,22 +79,5 @@ class UsersController extends Controller
             )
             ->get();
         return $userPermissions;
-    }
-    public function multipleUpdate(Request $request)
-    {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        User
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
     }
 }

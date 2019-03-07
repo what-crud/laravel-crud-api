@@ -6,7 +6,6 @@ use App\Models\Crm\CompanyComment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
-use Validator;
 
 class CompanyCommentsController extends Controller
 {
@@ -18,6 +17,9 @@ class CompanyCommentsController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = CompanyComment::class;
+    private $pk = 'id';
+
     public function index()
     {
         return CompanyComment
@@ -27,75 +29,36 @@ class CompanyCommentsController extends Controller
             ->with('companyCommentType')
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
         $userId = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'required|exists:companies,id',
-            'company_comment_type_id' => 'required|exists:company_comment_types,id',
-            'content' => 'required|string|max:2000',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $companyComment = [
-            'company_id' => $request->get('company_id'),
-            'company_comment_type_id' => $request->get('company_comment_type_id'),
-            'content' => $request->get('content'),
+        $computed = [
             'user_id' => $userId
         ];
-        $result = CompanyComment::create($companyComment);
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk, $computed);
     }
-    public function show(CompanyComment $companyComment)
+    public function show(CompanyComment $model)
     {
-        return $companyComment;
+        return $model;
     }
-    public function edit(CompanyComment $companyComment)
-    {
-        //
-    }
-    public function update(Request $request, CompanyComment $companyComment)
+    public function update(Request $request, CompanyComment $model)
     {
         $userId = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'exists:companies,id',
-            'company_comment_type_id' => 'exists:company_comment_types,id',
-            'content' => 'string|max:2000',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $companyComment->update($request->all());
-        $companyComment->update([
+        $computed = [
             'user_id' => $userId
-        ]);
-        return ['status' => 0, 'id' => $companyComment->id];
+        ];
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk, $computed);
     }
-    public function destroy(CompanyComment $companyComment)
+    public function destroy(CompanyComment $model)
     {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        CompanyComment
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

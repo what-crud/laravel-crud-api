@@ -6,7 +6,6 @@ use App\Models\Crm\PersonComment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
-use Validator;
 
 class PersonCommentsController extends Controller
 {
@@ -18,6 +17,9 @@ class PersonCommentsController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = PersonComment::class;
+    private $pk = 'id';
+
     public function index()
     {
         return PersonComment
@@ -27,75 +29,36 @@ class PersonCommentsController extends Controller
             ->with('personCommentType')
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
         $userId = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'person_id' => 'required|exists:people,id',
-            'person_comment_type_id' => 'required|exists:person_comment_types,id',
-            'content' => 'required|string|max:2000',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $personComment = [
-            'person_id' => $request->get('person_id'),
-            'person_comment_type_id' => $request->get('person_comment_type_id'),
-            'content' => $request->get('content'),
+        $computed = [
             'user_id' => $userId
         ];
-        $result = PersonComment::create($personComment);
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk, $computed);
     }
-    public function show(PersonComment $personComment)
+    public function show(PersonComment $model)
     {
-        return $personComment;
+        return $model;
     }
-    public function edit(PersonComment $personComment)
-    {
-        //
-    }
-    public function update(Request $request, PersonComment $personComment)
+    public function update(Request $request, PersonComment $model)
     {
         $userId = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'person_id' => 'exists:people,id',
-            'person_comment_type_id' => 'exists:person_comment_types,id',
-            'content' => 'string|max:2000',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $personComment->update($request->all());
-        $personComment->update([
+        $computed = [
             'user_id' => $userId
-        ]);
-        return ['status' => 0, 'id' => $personComment->id];
+        ];
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk, $computed);
     }
-    public function destroy(PersonComment $personComment)
+    public function destroy(PersonComment $model)
     {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        PersonComment
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

@@ -47,6 +47,14 @@ class Company extends Model
         'correspondence_street_prefix_id',
         'active',
     ];
+    
+    public static $validator = [
+        'name' => 'required|string',
+        'common_name' => 'required|string|max:1000',
+        'company_type_id' => 'required|exists:company_types,id',
+        'active' => 'boolean'
+    ];
+
     protected $appends = ['address'];
     
     public function getAddressAttribute()

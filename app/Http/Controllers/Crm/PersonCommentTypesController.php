@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\PersonCommentType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class PersonCommentTypesController extends Controller
 {
@@ -17,64 +16,35 @@ class PersonCommentTypesController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = PersonCommentType::class;
+    private $pk = 'id';
+
     public function index()
     {
         return PersonCommentType::orderBy('name', 'asc')->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:200',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = PersonCommentType::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(PersonCommentType $personCommentType)
+    public function show(PersonCommentType $model)
     {
-        return $personCommentType;
+        return $model;
     }
-    public function edit(PersonCommentType $personCommentType)
+    public function update(Request $request, PersonCommentType $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, PersonCommentType $personCommentType)
+    public function destroy(PersonCommentType $model)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:200',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $personCommentType->update($request->all());
-        return ['status' => 0, 'id' => $personCommentType->id];
-    }
-    public function destroy(PersonCommentType $personCommentType)
-    {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        PersonCommentType
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

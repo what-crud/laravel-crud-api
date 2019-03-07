@@ -12,6 +12,12 @@ class PositionTask extends Model
         'position_id',
         'task_id',
     ];
+    
+    public static $validator = [
+        'position_id' => 'required|exists:positions,id',
+        'task_id' => 'required|exists:tasks,id',
+        'active' => 'boolean'
+    ];
 
     public function position()
     {

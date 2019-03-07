@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Crm\UserType;
+use App\Models\Admin\UserType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

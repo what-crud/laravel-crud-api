@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Files;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
-use App\Models\Crm\UserPermission;
-use App\Models\Crm\Permission;
+use App\Models\Admin\UserPermission;
+use App\Models\Admin\Permission;
 use Validator;
 
 class FileController extends Controller

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class TasksController extends Controller
 {
@@ -17,66 +16,35 @@ class TasksController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = Task::class;
+    private $pk = 'id';
+
     public function index()
     {
-        return Task::orderBy('name', 'asc')->get();
-    }
-    public function create()
-    {
-        //
+        return Task::all();
     }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:200',
-            'description' => 'string|max:500|nullable',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = Task::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk, $computed);
     }
-    public function show(Task $task)
+    public function show(Task $model)
     {
-        return $task;
+        return $model;
     }
-    public function edit(Task $task)
+    public function update(Request $request, Task $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, Task $task)
+    public function destroy(Task $model)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:200',
-            'description' => 'string|max:500|nullable',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $task->update($request->all());
-        return ['status' => 0, 'id' => $task->id];
-    }
-    public function destroy(Task $task)
-    {
-        //
+        return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-
-        Task
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

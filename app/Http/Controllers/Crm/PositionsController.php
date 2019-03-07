@@ -6,7 +6,6 @@ use App\Models\Crm\Position;
 use App\Models\Crm\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class PositionsController extends Controller
 {
@@ -17,6 +16,10 @@ class PositionsController extends Controller
         $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
+
+    private $m = Position::class;
+    private $pk = 'id';
+
     public function index()
     {
         return Position
@@ -31,59 +34,29 @@ class PositionsController extends Controller
             ->with('positionTasks.task')
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'person_id' => 'required|exists:people,id',
-            'company_id' => 'required|exists:companies,id',
-            'name' => 'string|max:255|nullable',
-            'phone' => 'string|max:50|nullable',
-            'phone_2' => 'string|max:50|nullable',
-            'phone_3' => 'string|max:50|nullable',
-            'email' => 'string|max:255|nullable',
-            'email_2' => 'string|max:255|nullable',
-            'comment' => 'string|max:500|nullable',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-        $result = Position::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(Position $position)
+    public function show(Position $model)
     {
-        return $position;
+        return $model;
     }
-    public function edit(Position $position)
+    public function update(Request $request, Position $model)
     {
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, Position $position)
+    public function destroy(Position $model)
     {
-        $validator = Validator::make($request->all(), [
-            'person_id' => 'exists:people,id',
-            'company_id' => 'exists:companies,id',
-            'name' => 'string|max:255|nullable',
-            'phone' => 'string|max:50|nullable',
-            'phone_2' => 'string|max:50|nullable',
-            'phone_3' => 'string|max:50|nullable',
-            'email' => 'string|max:255|nullable',
-            'email_2' => 'string|max:255|nullable',
-            'comment' => 'string|max:500|nullable',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-        $position->update($request->all());
-        return ['status' => 0, 'id' => $position->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(Position $position)
+    public function multipleUpdate(Request $request)
     {
-        $position->delete();
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
     public function positionTasks(Request $request, $id)
     {
@@ -98,22 +71,5 @@ class PositionsController extends Controller
             )
             ->get();
         return $positionTasks;
-    }
-    public function multipleUpdate(Request $request)
-    {
-        $ids = $request->get('ids');
-
-        $validator = Validator::make($request->get('request'), [
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -2, 'msg' => $validator->errors()];
-        }
-
-        Position
-            ::whereIn('id', $ids)
-            ->update($request->get('request'));
-
-        return ['status' => 0];
     }
 }

@@ -21,6 +21,19 @@ class Position extends Model
         'comment',
         'active',
     ];
+    
+    public static $validator = [
+        'person_id' => 'required|exists:people,id',
+        'company_id' => 'required|exists:companies,id',
+        'name' => 'string|max:255|nullable',
+        'phone' => 'string|max:50|nullable',
+        'phone_2' => 'string|max:50|nullable',
+        'phone_3' => 'string|max:50|nullable',
+        'email' => 'string|max:255|nullable',
+        'email_2' => 'string|max:255|nullable',
+        'comment' => 'string|max:500|nullable',
+        'active' => 'boolean'
+    ];
 
     public function company()
     {

@@ -1,21 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Crm\UserPermission;
-use App\Models\Crm\UserType;
+use App\Models\Admin\UserPermission;
+use App\Models\Admin\UserType;
 
 class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'email',
@@ -25,13 +20,17 @@ class User extends Authenticatable
         'active'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    
+    public static $validator = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|max:255|unique:users,email',
+        'login' => 'required|string|max:255|unique:users,login',
+        'user_type_id' => 'exists:user_types,id',
+        'active' => 'nullable',
     ];
 
     public function userPermissions()

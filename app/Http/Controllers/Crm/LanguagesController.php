@@ -16,35 +16,35 @@ class LanguagesController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = Task::class;
+    private $pk = 'id';
+
     public function index()
     {
         return Language::orderBy('name', 'asc')->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $result = Language::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(Language $language)
+    public function show(Task $model)
     {
-        //
+        return $model;
     }
-    public function edit(Language $language)
+    public function update(Request $request, Task $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, Language $language)
+    public function destroy(Task $model)
     {
-        $language->update($request->all());
-        return ['status' => 0, 'id' => $language->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(Language $language)
+    public function multipleUpdate(Request $request)
     {
-        $language->delete();
-        return ['status' => 0];
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

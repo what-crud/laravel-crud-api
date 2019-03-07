@@ -14,6 +14,14 @@ class CompanyFile extends Model
         'description',
         'active'
     ];
+    
+    public static $validator = [
+        'company_id' => 'required|exists:companies,id',
+        'file' => 'required|string',
+        'file_2' => 'string|nullable',
+        'description' => 'string|nullable',
+        'active' => 'boolean',
+    ];
 
     public function company()
     {

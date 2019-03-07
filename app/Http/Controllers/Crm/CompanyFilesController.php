@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Crm;
 use App\Models\Crm\CompanyFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class CompanyFilesController extends Controller
 {
@@ -17,6 +16,9 @@ class CompanyFilesController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = CompanyFile::class;
+    private $pk = 'id';
+
     public function index()
     {
         return CompanyFile
@@ -24,49 +26,28 @@ class CompanyFilesController extends Controller
             ->with('company')
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'required|exists:companies,id',
-            'file' => 'required|string',
-            'file_2' => 'string|nullable',
-            'description' => 'string|nullable',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = CompanyFile::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(CompanyFile $companyFile)
+    public function show(CompanyFile $model)
     {
-        return $companyFile;
+        return $model;
     }
-    public function edit(CompanyFile $companyFile)
+    public function update(Request $request, CompanyFile $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, CompanyFile $companyFile)
+    public function destroy(CompanyFile $model)
     {
-        $validator = Validator::make($request->all(), [
-            'company_id' => 'exists:companies,id',
-            'file' => 'string',
-            'file_2' => 'string|nullable',
-            'description' => 'string|nullable',
-            'active' => 'boolean',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $companyFile->update($request->all());
-        return ['status' => 0, 'id' => $companyFile->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(CompanyFile $companyFile)
+    public function multipleUpdate(Request $request)
     {
-        //
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
+    }
+    public function multipleDelete(Request $request)
+    {
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

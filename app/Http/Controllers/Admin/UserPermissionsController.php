@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Crm\UserPermission;
+use App\Models\Admin\UserPermission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class UserPermissionsController extends Controller
 {
@@ -17,65 +16,39 @@ class UserPermissionsController extends Controller
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
 
+    private $m = UserPermission::class;
+    private $pk = 'id';
+
     public function index()
     {
         return UserPermission::orderBy('id', 'asc')->with('user')->with('permission')->get();
     }
-    public function create()
-    {
-
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'permission_id' => 'required|exists:permissions,id',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = UserPermission::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(UserPermission $userPermission)
+    public function show(UserPermission $model)
     {
-        return $userPermission;
+        return $model;
     }
-    public function edit(UserPermission $userPermission)
+    public function update(Request $request, UserPermission $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, UserPermission $userPermission)
+    public function destroy(UserPermission $model)
     {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'exists:users,id',
-            'permission_id' => 'exists:permissions,id',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $userPermission->update($request->all());
-        return ['status' => 0, 'id' => $userPermission->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(UserPermission $userPermission)
+    public function multipleUpdate(Request $request)
     {
-        $userPermission->delete();
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
     }
     public function multipleDelete(Request $request)
     {
-        $ids = $request->get('ids');
-
-        UserPermission
-            ::whereIn('id', $ids)
-            ->delete();
-
-        return ['status' => 0];
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
     public function multipleAdd(Request $request)
     {
-        $items = $request->get('items');
-
-        UserPermission::insert($items);
+        return $this->rMultipleAdd($this->m, $request);
     }
 }

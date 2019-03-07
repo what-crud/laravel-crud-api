@@ -1,33 +1,39 @@
 <?php
 
+use App\Resources\CRUD;
 
 // Authentication and modifying authenticated user
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
 
     //Route::post('/register', ['uses' => 'AuthController@register','as' => 'auth.register']);
-    Route::post('/login', ['uses' => 'Auth\AuthController@login','as' => 'auth.login']);
-    Route::get('/logout', ['uses' => 'Auth\AuthController@logout','as' => 'auth.logout']);
+    Route::post('/login', ['uses' => 'AuthController@login', 'as' => 'auth.login']);
+    Route::get('/logout', ['uses' => 'AuthController@logout', 'as' => 'auth.logout']);
 
     //  Middleware - authentication
     Route::group(['middleware' => ['auth.jwt']], function () {
-        Route::get('/user', ['uses' => 'Auth\AuthController@getUser','as' => 'auth.getUser']);
-        Route::get('/user-permissions', ['uses' => 'Auth\AuthController@getUserPermissions','as' => 'auth.getUserPermissions']);
-        Route::post('/user', ['uses' => 'Auth\AuthController@editUser','as' => 'auth.editUser'])->middleware('role:update');
-        Route::post('/user-password', ['uses' => 'Auth\AuthController@editUserPassword','as' => 'auth.editUserPassword'])->middleware('role:update');
-        Route::post('/refresh-token', ['uses' => 'Auth\AuthController@refreshToken','as' => 'auth.refreshToken']);
+        Route::get('/user', ['uses' => 'AuthController@getUser', 'as' => 'auth.getUser']);
+        Route::get('/user-permissions', ['uses' => 'AuthController@getUserPermissions', 'as' => 'auth.getUserPermissions']);
+        Route::post('/user', ['uses' => 'AuthController@editUser', 'as' => 'auth.editUser']);
+        Route::post('/user-password', ['uses' => 'AuthController@editUserPassword', 'as' => 'auth.editUserPassword']);
+        Route::post('/refresh-token', ['uses' => 'AuthController@refreshToken', 'as' => 'auth.refreshToken']);
     });
 
 });
 
-// Authentication and modifying authenticated user
-Route::group(['prefix' => 'demo', 'namespace' => 'Demo'], function () {
-    Route::apiResource('/tasks', 'TasksController');
-    Route::post('/tasks/multiple-update', 'TasksController@multipleUpdate');
-    Route::post('/tasks/multiple-delete', 'TasksController@multipleDelete');
-});
+// CRUD operations
+Route::get('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@index']);
+Route::get('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@show']);
+Route::put('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@update']);
+Route::delete('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@destroy']);
+Route::post('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@store']);
+Route::post('/crud/{prefix}/{path}/multiple-update', ['uses' => 'CRUDcontroller@multipleUpdate']);
+Route::post('/crud/{prefix}/{path}/multiple-delete', ['uses' => 'CRUDcontroller@multipleDelete']);
+Route::post('/crud/{prefix}/{path}/multiple-add', ['uses' => 'CRUDcontroller@multipleAdd']);
+
+// Custom CRUD operations
 
 //  Middleware - authentication
-Route::group(['middleware' => ['auth.jwt']], function () {
+Route::group(['middleware' => ['auth.jwt']], function ($CRUD) {
 
     // File management
     Route::group(['prefix' => 'files'], function () {
@@ -35,59 +41,75 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::post('/file-upload', 'Files\FileController@fileUpload');
     });
 
-    //  Permission - CRM
-    Route::group(['prefix' => 'crm', 'middleware' => ['permission:CRM'], 'namespace' => 'Crm'], function () {
-        Route::apiResource('/companies', 'CompaniesController');
-        Route::apiResource('/people', 'PeopleController');
-        Route::apiResource('/positions', 'PositionsController');
-        Route::apiResource('/company-comments', 'CompanyCommentsController');
-        Route::apiResource('/person-comments', 'PersonCommentsController');
-        Route::apiResource('/position-tasks', 'PositionTasksController');
-        Route::apiResource('/company-types', 'CompanyTypesController');
-        Route::apiResource('/company-comment-types', 'CompanyCommentTypesController');
-        Route::apiResource('/person-comment-types', 'PersonCommentTypesController');
-        Route::apiResource('/tasks', 'TasksController');
-        Route::apiResource('/street-prefixes', 'StreetPrefixesController');
-        Route::apiResource('/sexes', 'SexesController');
-        Route::apiResource('/languages', 'LanguagesController');
-        Route::apiResource('/company-files', 'CompanyFilesController');
-        Route::apiResource('/person-files', 'PersonFilesController');
-        // multiple update
-        Route::post('/companies/multiple-update', 'CompaniesController@multipleUpdate');
-        Route::post('/people/multiple-update', 'PeopleController@multipleUpdate');
-        Route::post('/positions/multiple-update', 'PositionsController@multipleUpdate');
-        Route::post('/company-comments/multiple-update', 'CompanyCommentsController@multipleUpdate');
-        Route::post('/person-comments/multiple-update', 'PersonCommentsController@multipleUpdate');
-        Route::post('/company-types/multiple-update', 'CompanyTypesController@multipleUpdate');
-        Route::post('/company-comment-types/multiple-update', 'CompanyCommentTypesController@multipleUpdate');
-        Route::post('/person-comment-types/multiple-update', 'PersonCommentTypesController@multipleUpdate');
-        Route::post('/tasks/multiple-update', 'TasksController@multipleUpdate');
-        //multiple delete
-        Route::post('/position-tasks/multiple-delete', 'PositionTasksController@multipleDelete');
-        //multiple add
-        Route::post('/position-tasks/multiple-add', 'PositionTasksController@multipleAdd');
-        // custom
-        Route::get('/positions/{id}/tasks', ['uses' => 'PositionsController@positionTasks', 'as' => 'crmPositions.positionTasks']);
-        //search
-        Route::post('/people/search', 'PeopleController@search');
-    });
+    $CRUDresources = CRUD::$resources;
 
-    //  Permission - ADMIN
-    Route::group(['prefix' => 'admin', 'middleware' => ['permission:ADMIN'], 'namespace' => 'Admin'], function () {
-        Route::apiResource('/users', 'UsersController');
-        Route::apiResource('/permissions', 'PermissionsController');
-        Route::apiResource('/user-permissions', 'UserPermissionsController');
-        Route::apiResource('/user-types', 'UserTypesController');
-        // multiple update
-        Route::post('/users/multiple-update', 'UsersController@multipleUpdate');
-        Route::post('/permissions/multiple-update', 'PermissionsController@multipleUpdate');
-        //multiple delete
-        Route::post('/user-permissions/multiple-delete', 'UserPermissionsController@multipleDelete');
-        //multiple add
-        Route::post('/user-permissions/multiple-add', 'UserPermissionsController@multipleAdd');
-        // custom
-        Route::put('/users/{id}/reset-password', ['uses' => 'UsersController@resetPassword', 'as' => 'adminUsers.resetPassword']);
-        Route::get('/users/{id}/permissions', ['uses' => 'UsersController@userPermissions', 'as' => 'adminUsers.userPermissions']);
-    });
+    foreach ($CRUDresources as $module) {
+
+        $routeGroup = [];
+        if(array_key_exists('prefix', $module)){
+            $routeGroup['prefix'] = $module['prefix'];
+        }
+        if(array_key_exists('middleware', $module)){
+            $routeGroup['middleware'] = ['permission:' . $module['permission']];
+        }
+        if(array_key_exists('namespace', $module)){
+            $routeGroup['namespace'] = $module['namespace'];
+        }
+
+        $resources = $module['resources'];
+
+        // module route group
+        Route::group($routeGroup, function () use ($resources) {
+            foreach ($resources as $resource) {
+                if(array_key_exists('controller', $resource)){
+                    // resource rest api routes
+                    Route::apiResource('/' . $resource['path'], $resource['controller']);
+                    // resource multiple update
+                    Route::post('/' . $resource['path'] . '/multiple-update', $resource['controller'] . '@multipleUpdate');
+                    // resource multiple delete
+                    $delete = array_key_exists('delete', $resource) ? $resource['delete'] : false;
+                    if ($delete) {
+                        Route::post('/' . $resource['path'] . '/multiple-delete', $resource['controller'] . '@multipleDelete');
+                    }
+                    // resource multiple add
+                    $multipleAdd = array_key_exists('multipleAdd', $resource) ? $resource['multipleAdd'] : false;
+                    if ($multipleAdd) {
+                        Route::post('/' . $resource['path'] . '/multiple-add', $resource['controller'] . '@multipleAdd');
+                    }
+                    // resource search, sort and paginate
+                    $search = array_key_exists('search', $resource) ? $resource['search'] : false;
+                    if ($search) {
+                        Route::post('/' . $resource['path'] . '/search', $resource['controller'] . '@search');
+                    }
+                    // resource custom routes
+                    if (array_key_exists('custom', $resource)) {
+                        $custom = $resource['custom'];
+                        foreach ($custom as $customResource) {
+                            $path = '/' . $resource['path'] . $customResource['path'];
+                            $function = $resource['controller'] . '@' . $customResource['function'];
+                            switch ($customResource['method']) {
+                                case 'get':
+                                    Route::get($path, $function);
+                                    break;
+                                case 'post':
+                                    Route::post($path, $function);
+                                    break;
+                                case 'put':
+                                    Route::put($path, $function);
+                                    break;
+                                case 'patch':
+                                    Route::patch($path, $function);
+                                    break;
+                                case 'delete':
+                                    Route::delete($path, $function);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
-

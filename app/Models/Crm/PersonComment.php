@@ -5,7 +5,7 @@ namespace App\Models\Crm;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Crm\Person;
 use App\Models\Crm\PersonCommentType;
-use App\Models\User;
+use App\Models\Admin\User;
 
 class PersonComment extends Model
 {
@@ -15,6 +15,13 @@ class PersonComment extends Model
         'person_id',
         'person_comment_type_id',
         'active'
+    ];
+    
+    public static $validator = [
+        'person_id' => 'required|exists:people,id',
+        'person_comment_type_id' => 'required|exists:person_comment_types,id',
+        'content' => 'required|string|max:2000',
+        'active' => 'boolean'
     ];
 
     public function person()

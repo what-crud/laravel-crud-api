@@ -6,7 +6,6 @@ use App\Models\Crm\PositionTask;
 use App\Models\Crm\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class PositionTasksController extends Controller
 {
@@ -17,6 +16,9 @@ class PositionTasksController extends Controller
         $this->middleware('role:update', ['only' => ['update', 'multipleUpdate']]);
         $this->middleware('role:delete', ['only' => ['destroy']]);
     }
+
+    private $m = PositionTask::class;
+    private $pk = 'id';
 
     public function index()
     {
@@ -38,61 +40,32 @@ class PositionTasksController extends Controller
             )
             ->get();
     }
-    public function create()
-    {
-        //
-    }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'position_id' => 'required|exists:positions,id',
-            'task_id' => 'required|exists:tasks,id',
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $result = PositionTask::create($request->all());
-        return ['status' => 0, 'id' => $result->id];
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(PositionTask $positionTask)
+    public function show(Task $model)
     {
-        return $positionTask;
+        return $model;
     }
-    public function edit(PositionTask $positionTask)
+    public function update(Request $request, Task $model)
     {
-        //
+        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function update(Request $request, PositionTask $positionTask)
+    public function destroy(Task $model)
     {
-        $validator = Validator::make($request->all(), [
-            'position_id' => 'exists:positions,id',
-            'task_id' => 'exists:tasks,id',
-            'active' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
-        }
-        $positionTask->update($request->all());
-        return ['status' => 0, 'id' => $positionTask->id];
+        return $this->rDestroy($model);
     }
-    public function destroy(PositionTask $positionTask)
+    public function multipleUpdate(Request $request)
     {
-        $positionTask->delete();
+        return $this->rMultipleUpdate($this->m, $request, $this->pk);
     }
     public function multipleDelete(Request $request)
     {
-        $ids = $request->get('ids');
-
-        PositionTask
-            ::whereIn('id', $ids)
-            ->delete();
-
-        return ['status' => 0];
+        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
     public function multipleAdd(Request $request)
     {
-        $items = $request->get('items');
-
-        PositionTask::insert($items);
+        return $this->rMultipleAdd($this->m, $request);
     }
 }
