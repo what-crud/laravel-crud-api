@@ -38,9 +38,9 @@ class PositionsController extends Controller
     {
         return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(Position $model)
+    public function show($id)
     {
-        return $model;
+        return Position::where('id', $id)->first();
     }
     public function update(Request $request, Position $model)
     {

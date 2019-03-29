@@ -100,4 +100,18 @@ class PeopleController extends Controller
 
         return ModelTreatment::getAsyncData($model, $request, $columns, 'crm', 'people', 'lastname', 'ASC');
     }
+    public function itemsList($mode, $search = '')
+    {
+        $people = DB::table('people')
+            ->select('id', DB::raw("CONCAT(lastname, ' ', firstname) as phrase"))
+            ->orderBy("phrase", 'asc');
+
+        if($mode == 'id'){
+            $people = $people->where('id', $search);
+        }
+        else if($mode == 'phrase'){
+            $people = $people->where(DB::raw("CONCAT(lastname, ' ', firstname)"), 'like', '%'.$search.'%');
+        }
+        return $people->take(100)->get();
+    }
 }

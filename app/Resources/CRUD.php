@@ -19,6 +19,7 @@ class CRUD
             'resources' => [
                 ['path' => 'companies', 'controller' => 'CompaniesController', 'model' => 'App\Models\Crm\Company'],
                 ['path' => 'people', 'controller' => 'PeopleController', 'model' => 'App\Models\Crm\Person', 'custom' => [
+                    ['path' => '-list/{mode}/{search?}', 'method' => 'get', 'function' => 'itemsList'],
                     ['path' => '/search', 'method' => 'post', 'function' => 'search']]
                 ],
                 ['path' => 'positions', 'controller' => 'PositionsController', 'model' => 'App\Models\Crm\Position', 'custom' => [
