@@ -20,20 +20,26 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
 
 });
 
-// CRUD operations
-Route::get('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@index']);
-Route::get('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@show']);
-Route::put('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@update']);
-Route::delete('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@destroy']);
-Route::post('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@store']);
-Route::post('/crud/{prefix}/{path}/multiple-update', ['uses' => 'CRUDcontroller@multipleUpdate']);
-Route::post('/crud/{prefix}/{path}/multiple-delete', ['uses' => 'CRUDcontroller@multipleDelete']);
-Route::post('/crud/{prefix}/{path}/multiple-add', ['uses' => 'CRUDcontroller@multipleAdd']);
+
+Route::apiResource('/demo/tasks', 'Demo\TasksController');
+Route::post('/demo/tasks/multiple-update', ['uses' => 'Demo\TasksController@multipleUpdate']);
+Route::post('/demo/tasks/multiple-delete', ['uses' => 'Demo\TasksController@multipleDelete']);
+Route::post('/demo/tasks/multiple-add', ['uses' => 'Demo\TasksController@multipleAdd']);
 
 // Custom CRUD operations
 
 //  Middleware - authentication
 Route::group(['middleware' => ['auth.jwt']], function ($CRUD) {
+    
+    // CRUD operations
+    Route::get('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@index']);
+    Route::get('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@show']);
+    Route::put('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@update']);
+    Route::delete('/crud/{prefix}/{path}/{id}', ['uses' => 'CRUDcontroller@destroy']);
+    Route::post('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@store']);
+    Route::post('/crud/{prefix}/{path}/multiple-update', ['uses' => 'CRUDcontroller@multipleUpdate']);
+    Route::post('/crud/{prefix}/{path}/multiple-delete', ['uses' => 'CRUDcontroller@multipleDelete']);
+    Route::post('/crud/{prefix}/{path}/multiple-add', ['uses' => 'CRUDcontroller@multipleAdd']);
 
     // File management
     Route::group(['prefix' => 'files'], function () {

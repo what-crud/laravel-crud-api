@@ -49,16 +49,4 @@ class PersonCommentsController extends Controller
         ];
         return $this->rUpdate($this->m, $model, $request->all(), $this->pk, $computed);
     }
-    public function destroy(PersonComment $model)
-    {
-        return $this->rDestroy($model);
-    }
-    public function multipleUpdate(Request $request)
-    {
-        return $this->rMultipleUpdate($this->m, $request, $this->pk);
-    }
-    public function multipleDelete(Request $request)
-    {
-        return $this->rMultipleDelete($this->m, $request, $this->pk);
-    }
 }

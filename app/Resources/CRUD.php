@@ -5,17 +5,9 @@ class CRUD
 {
     public static $resources = [
         [
-            'prefix' => 'demo',
-            'permission' => null,
-            'namespace' => 'Demo',
-            'resources' => [
-                ['path' => 'tasks', 'controller' => 'TasksController', 'model' => 'App\Models\Crm\Task', 'delete' => true],
-            ],
-        ],
-        [
             'prefix' => 'crm',
             'permission' => 'CRM',
-            'namespace' => 'CRM',
+            'namespace' => 'Crm',
             'resources' => [
                 ['path' => 'companies', 'controller' => 'CompaniesController', 'model' => 'App\Models\Crm\Company'],
                 ['path' => 'people', 'controller' => 'PeopleController', 'model' => 'App\Models\Crm\Person', 'custom' => [

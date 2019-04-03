@@ -18,18 +18,20 @@ class TasksController extends Controller
     }
     public function store(Request $request)
     {
-        return $this->rStore($this->m, $request, $this->pk, $computed);
+        return $this->rStore($this->m, $request, $this->pk);
     }
-    public function show(Task $model)
+    public function show($id)
     {
-        return $model;
+        return Task::where('id', $id)->first();
     }
-    public function update(Request $request, Task $model)
+    public function update(Request $request, $id)
     {
+        $model = Task::where('id', $id)->first();
         return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
     }
-    public function destroy(Task $model)
+    public function destroy($id)
     {
+        $model = Task::where('id', $id)->first();
         return $this->rDestroy($model);
     }
     public function multipleUpdate(Request $request)

@@ -27,20 +27,15 @@ class CompaniesController extends Controller
             ->orderBy('common_name', 'asc')
             ->get();
     }
-    public function store(Request $request)
+    public function show($id)
     {
-        return $this->rStore($this->m, $request, $this->pk);
-    }
-    public function show(Company $model)
-    {
-        $id = $model->id;
         $companyInfo = Company
             ::where('id', $id)
             ->with('companyType')
             ->with('streetPrefix')
             ->with('files')
             ->with('positions', 'positions.person')
-            ->with('positions.positionCompanys.Company')
+            ->with('positions.company')
             ->with(
                 'comments.companyCommentType',
                 'comments.user'
@@ -54,21 +49,5 @@ class CompaniesController extends Controller
             )
             ->first();
         return $companyInfo;
-    }
-    public function update(Request $request, Company $model)
-    {
-        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
-    }
-    public function destroy(Company $model)
-    {
-        return $this->rDestroy($model);
-    }
-    public function multipleUpdate(Request $request)
-    {
-        return $this->rMultipleUpdate($this->m, $request, $this->pk);
-    }
-    public function multipleDelete(Request $request)
-    {
-        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

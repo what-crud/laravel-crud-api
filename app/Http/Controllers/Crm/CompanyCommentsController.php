@@ -37,28 +37,17 @@ class CompanyCommentsController extends Controller
         ];
         return $this->rStore($this->m, $request, $this->pk, $computed);
     }
-    public function show(CompanyComment $model)
+    public function show($id)
     {
-        return $model;
+        return CompanyComment::find($id);
     }
-    public function update(Request $request, CompanyComment $model)
+    public function update(Request $request, $id)
     {
+        $model = CompanyComment::find($id);
         $userId = Auth::user()->id;
         $computed = [
             'user_id' => $userId
         ];
         return $this->rUpdate($this->m, $model, $request->all(), $this->pk, $computed);
-    }
-    public function destroy(CompanyComment $model)
-    {
-        return $this->rDestroy($model);
-    }
-    public function multipleUpdate(Request $request)
-    {
-        return $this->rMultipleUpdate($this->m, $request, $this->pk);
-    }
-    public function multipleDelete(Request $request)
-    {
-        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
 }

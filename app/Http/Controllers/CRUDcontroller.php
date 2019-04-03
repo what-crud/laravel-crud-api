@@ -11,6 +11,13 @@ use App\Resources\CRUD;
 
 class CRUDcontroller extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:read', ['only' => ['index', 'show']]);
+        $this->middleware('role:insert', ['only' => ['store', 'multipleAdd']]);
+        $this->middleware('role:update', ['only' => ['update', 'multipleUpdate',]]);
+        $this->middleware('role:delete', ['only' => ['destroy', 'nultipleDelete']]);
+    }
     private function isMethodAllowed($method, $prefix, $path)
     {        
         $CRUDresources = CRUD::$resources;
@@ -77,6 +84,7 @@ class CRUDcontroller extends Controller
     }
     public function update(Request $request, $prefix, $path, $id)
     {
+        echo 'test';
         if($this->isMethodAllowed('u', $prefix, $path)){
             $model = $this->model;
             $obj = $model::where($this->pk, $id)->first();

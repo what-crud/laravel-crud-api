@@ -31,13 +31,8 @@ class PeopleController extends Controller
             ->with('sex')
             ->get();
     }
-    public function store(Request $request)
+    public function show($id)
     {
-        return $this->rStore($this->m, $request, $this->pk);
-    }
-    public function show(Person $model)
-    {
-        $id = $model->id;
         $personInfo = Person
             ::where('id', $id)
             ->with('language')
@@ -53,22 +48,6 @@ class PeopleController extends Controller
             )
             ->first();
         return $personInfo;
-    }
-    public function update(Request $request, Person $model)
-    {
-        return $this->rUpdate($this->m, $model, $request->all(), $this->pk);
-    }
-    public function destroy(Person $model)
-    {
-        return $this->rDestroy($model);
-    }
-    public function multipleUpdate(Request $request)
-    {
-        return $this->rMultipleUpdate($this->m, $request, $this->pk);
-    }
-    public function multipleDelete(Request $request)
-    {
-        return $this->rMultipleDelete($this->m, $request, $this->pk);
     }
     public function search(Request $request)
     {
