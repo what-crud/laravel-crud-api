@@ -28,7 +28,8 @@ php artisan key:generate
 php artisan load-template
 ```
 and select one of available templates
-6. Type:
+
+8. Type:
 ```
 php artisan migrate
 ```
