@@ -41,4 +41,4 @@ php artisan serve
 
 ## License
 
-The Vue CRUD Laravel API is application licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The Laravel CRUD API is application licensed under the [MIT license](http://opensource.org/licenses/MIT).
