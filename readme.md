@@ -1,4 +1,4 @@
-<h1 align="center">Vue CRUD Laravel API</h1>
+<h1 align="center">Laravel CRUD API</h1>
 
 ## About
 
