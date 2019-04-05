@@ -9,15 +9,34 @@ Vue CRUD Laravel API is an API written using PHP and Laravel, dedicated to as a 
 - Composer
 
 ## Installation
-- Clone or download this project,
-- Open command line and go to the project directory,
-- Type "composer install",
-- Create database(s) for your project,
-- Create .env file based on .env.example and configure your project,
-- Type "php artisan key:generate",
-- Type "php artisan migrate",
-- Add records to 'users', 'permissions' and 'user_permissions' table - you may use seeders for this purpose,
-- Type "php artisan serve"
+
+Follow these steps:
+1. Clone or download this project,
+2. Open command line and go to the project directory,
+3. Type:
+```
+composer install
+```
+4. Create database(s) for your project,
+5. Create .env file based on .env.example and configure your project,
+6. Type:
+```
+php artisan key:generate
+```
+7. Type:
+```
+php artisan load-template
+```
+and select one of available templates
+6. Type:
+```
+php artisan migrate
+```
+9. Run seeders if available,
+10. Type:
+```
+php artisan serve
+```
 
 ## License
 
