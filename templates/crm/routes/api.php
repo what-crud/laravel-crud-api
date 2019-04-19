@@ -13,8 +13,8 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::group(['middleware' => ['auth.jwt']], function () {
         Route::get('/user', ['uses' => 'AuthController@getUser', 'as' => 'auth.getUser']);
         Route::get('/user-permissions', ['uses' => 'AuthController@getUserPermissions', 'as' => 'auth.getUserPermissions']);
-        Route::post('/user', ['uses' => 'AuthController@editUser', 'as' => 'auth.editUser']);
-        Route::post('/user-password', ['uses' => 'AuthController@editUserPassword', 'as' => 'auth.editUserPassword']);
+        Route::post('/user', ['uses' => 'AuthController@editUser', 'as' => 'auth.editUser'])->middleware('role:update');
+        Route::post('/user-password', ['uses' => 'AuthController@editUserPassword', 'as' => 'auth.editUserPassword'])->middleware('role:update');
         Route::post('/refresh-token', ['uses' => 'AuthController@refreshToken', 'as' => 'auth.refreshToken']);
     });
 

@@ -84,7 +84,6 @@ class CRUDcontroller extends Controller
     }
     public function update(Request $request, $prefix, $path, $id)
     {
-        echo 'test';
         if($this->isMethodAllowed('u', $prefix, $path)){
             $model = $this->model;
             $obj = $model::where($this->pk, $id)->first();
