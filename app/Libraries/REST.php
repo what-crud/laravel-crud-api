@@ -16,33 +16,29 @@ trait REST
         if ($validator->fails()) {
             return ['status' => -2, 'msg' => $validator->errors()];
         }
-        $insert = $computed;
+        $insert = [];
         foreach ($fields as $key => $value) {
             if($request->has($key)){
                 $insert[$key] = $request->get($key);
             }
         }
+        foreach ($computed as $key => $value) {
+            $insert[$key] = $value;
+        }
         $result = $model::create($insert);
         return ['status' => 0, 'id' => $result[$primaryKey]];
     }
     // update item
-    public function rUpdate($model, $obj, $newValues, $primaryKey, $customFillable = false, $fillable = [])
+    public function rUpdate($model, $obj, $newValues, $primaryKey, $computed = [])
     {
         $fields = \ValidationHelper::update($model::$validator, $obj[$primaryKey]);
         $validator = Validator::make($newValues, $fields);
         if ($validator->fails()) {
             return ['status' => -2, 'msg' => $validator->errors()];
         }
-        if($customFillable){
-            $update = [];
-            foreach($newValues as $key => $value){
-                if(in_array($key, $fillable)){
-                    $update[$key] = $value;
-                }
-            }
-        }
-        else{
-            $update = $newValues;
+        $update = $newValues;
+        foreach ($computed as $key => $value) {
+            $update[$key] = $value;
         }
 
         $obj->update($update);

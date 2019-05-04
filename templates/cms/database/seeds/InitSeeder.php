@@ -11,6 +11,10 @@ class InitSeeder extends Seeder
         DB::table('permissions')
         ->insert([
             [
+                'name' => 'CMS',
+                'code' => 'CMS',
+            ],
+            [
                 'name' => 'Blog',
                 'code' => 'BLOG',
             ],
@@ -69,7 +73,8 @@ class InitSeeder extends Seeder
         ->insert([
             ['user_id' => 1,'permission_id' => 1],
             ['user_id' => 1,'permission_id' => 2],
-            ['user_id' => 1,'permission_id' => 3]
+            ['user_id' => 1,'permission_id' => 3],
+            ['user_id' => 1,'permission_id' => 4]
         ]);
 
         DB::table('languages')

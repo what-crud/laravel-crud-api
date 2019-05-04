@@ -18,9 +18,9 @@ class CreatePostsTable extends Migration
             $table->string('title', 500);
             $table->string('slug', 500)->unique();
             $table->string('description', 2000);
-            $table->string('content');
-            $table->string('image')->nullable();
-            $table->string('thumbnail');
+            $table->longText('content');
+            $table->string('image', 2000)->nullable();
+            $table->string('thumbnail', 2000);
             $table->boolean('active')->default(false);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');

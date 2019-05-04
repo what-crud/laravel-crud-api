@@ -17,6 +17,7 @@ class CreatePermissionsTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('code', 10)->unique();
+            $table->string('path', 10)->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
