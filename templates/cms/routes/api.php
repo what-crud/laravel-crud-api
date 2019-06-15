@@ -7,7 +7,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
 
     //Route::post('/register', ['uses' => 'AuthController@register','as' => 'auth.register']);
     Route::post('/login', ['uses' => 'AuthController@login', 'as' => 'auth.login']);
-    Route::get('/logout', ['uses' => 'AuthController@logout', 'as' => 'auth.logout']);
+    Route::post('/logout', ['uses' => 'AuthController@logout', 'as' => 'auth.logout']);
 
     //  Middleware - authentication
     Route::group(['middleware' => ['auth.jwt']], function () {
