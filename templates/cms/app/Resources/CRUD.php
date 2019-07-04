@@ -10,7 +10,7 @@ class CRUD
             'namespace' => 'Cms',
             'resources' => [
                 ['path' => 'messages', 'controller' => 'MessagesController', 'model' => 'App\Models\Cms\Message'],
-                ['path' => 'settings', 'controller' => 'SettingsController', 'model' => 'App\Models\Cms\Setting'],
+                ['path' => 'settings', 'controller' => 'SettingsController', 'model' => 'App\Models\Cms\Settings'],
             ],
         ],
         [
