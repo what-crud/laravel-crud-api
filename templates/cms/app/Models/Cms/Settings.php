@@ -10,16 +10,14 @@ class Settings extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'email',
-        'sender',
-        'content',
-        'active'
+        'type',
+        'name',
+        'value'
     ];
     
     public static $validator = [
-        'email' => 'required|string',
-        'sender' => 'required|string',
-        'content' => 'required|string|max:5000',
-        'active' => 'boolean',
+        'type' => 'required|string|max:100',
+        'name' => 'required|string',
+        'value' => 'required|string|max:5000'
     ];
 }
