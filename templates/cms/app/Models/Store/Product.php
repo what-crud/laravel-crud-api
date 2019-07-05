@@ -4,6 +4,7 @@ namespace App\Models\Store;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Store\TransactionProduct;
+use App\Models\Store\Section;
 
 class Product extends Model
 {
@@ -21,7 +22,7 @@ class Product extends Model
     
     public static $validator = [
         'name' => 'required|string|max:500',
-        'slug' => 'required|string|max:500',
+        'slug' => 'nullable|string|max:500',
         'description' => 'required|string|max:2000',
         'price' => 'required|numeric',
         'quantity' => 'required|integer',
@@ -34,5 +35,10 @@ class Product extends Model
     public function productTransactions()
     {
         return $this->hasMany(TransactionProduct::class, 'product_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'section_id');
     }
 }
