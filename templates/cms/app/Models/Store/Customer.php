@@ -23,7 +23,7 @@ class Customer extends Model
     public static $validator = [
         'firstname' => 'required|string|max:500',
         'lastname' => 'required|string|max:500',
-        'company' => 'boolean',
+        'company' => 'nullable|boolean',
         'registration_number' => 'nullable|string',
         'phone' => 'nullable|string|max:20',
         'email' => 'required|string|max:200',
