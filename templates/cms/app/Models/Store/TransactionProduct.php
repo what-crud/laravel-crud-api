@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Store\Product;
 use App\Models\Store\Transaction;
 
-class producttransaction extends Model
+class TransactionProduct extends Model
 {
     public $timestamps = false;
     
