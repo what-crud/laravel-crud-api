@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('thumbnail')->nullable();
             $table->integer('section_id')->unsigned();
             $table->foreign('section_id')->references('id')->on('sections');
-            $table->boolean('active')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

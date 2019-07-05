@@ -27,7 +27,7 @@ class ProductsController extends Controller
     }
     public function store(Request $request)
     {
-        $initSlug = $request->get('title');
+        $initSlug = $request->get('name');
         if ($request->has('slug')) {
             $initSlug = $request->get('slug');
         }
@@ -39,7 +39,7 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $model = Product::find($id);
-        $initSlug = $request->get('title');
+        $initSlug = $request->get('name');
         if ($request->has('slug')) {
             $initSlug = $request->get('slug');
         }
