@@ -9,6 +9,7 @@ class Product extends Model
 {
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'price',
         'quantity',
@@ -20,6 +21,7 @@ class Product extends Model
     
     public static $validator = [
         'name' => 'required|string|max:500',
+        'slug' => 'required|string|max:500',
         'description' => 'required|string|max:2000',
         'price' => 'required|numeric',
         'quantity' => 'required|integer',
