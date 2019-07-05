@@ -22,6 +22,7 @@ class CRUD
                 ['path' => 'products', 'controller' => 'ProductsController', 'model' => 'App\Models\Store\Product'],
                 ['path' => 'customers', 'controller' => 'CustomersController', 'model' => 'App\Models\Store\Customer'],
                 ['path' => 'transactions', 'controller' => 'TransactionsController', 'model' => 'App\Models\Store\Transaction'],
+                ['path' => 'statuses', 'controller' => 'StatusesController', 'model' => 'App\Models\Store\Status', 'fullCrud' => false, 'crudInclude' => 'i'],
                 ['path' => 'transaction-products', 'controller' => 'TransactionProductsController', 'model' => 'App\Models\Store\TransactionProduct'],
             ],
         ],
