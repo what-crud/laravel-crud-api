@@ -14,6 +14,19 @@ class CRUD
             ],
         ],
         [
+            'prefix' => 'store',
+            'permission' => 'STORE',
+            'namespace' => 'Store',
+            'resources' => [
+                ['path' => 'sections', 'controller' => 'SectionsController', 'model' => 'App\Models\Store\Section'],
+                ['path' => 'products', 'controller' => 'ProductsController', 'model' => 'App\Models\Store\Product'],
+                ['path' => 'customers', 'controller' => 'CustomersController', 'model' => 'App\Models\Store\Customer'],
+                ['path' => 'transactions', 'controller' => 'TransactionsController', 'model' => 'App\Models\Store\Transaction'],
+                ['path' => 'statuses', 'controller' => 'StatusesController', 'model' => 'App\Models\Store\Status', 'fullCrud' => false, 'crudInclude' => 'i'],
+                ['path' => 'transaction-products', 'controller' => 'TransactionProductsController', 'model' => 'App\Models\Store\TransactionProduct'],
+            ],
+        ],
+        [
             'prefix' => 'blog',
             'permission' => 'BLOG',
             'namespace' => 'Blog',

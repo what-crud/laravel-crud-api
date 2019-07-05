@@ -18,7 +18,7 @@ class CreateCustomersTable extends Migration
             $table->string('firstname', 500);
             $table->string('lastname', 500);
             $table->boolean('company')->default(false);
-            $table->boolean('registration_number')->nullable();
+            $table->string('registration_number')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('email', 200);
             $table->string('street', 200)->nullable();
