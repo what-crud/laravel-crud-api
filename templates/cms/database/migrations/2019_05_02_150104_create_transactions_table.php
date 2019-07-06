@@ -23,7 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->dateTime('started_at')->nullable();
             $table->dateTime('sent_at')->nullable();
             $table->dateTime('delivered_at')->nullable();
-            $table->boolean('active')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
