@@ -14,9 +14,9 @@ class FileController extends Controller
     public function fileUpload(Request $request){
 
         //  check if the module exists
-        $module = str_replace("crud/", "", $request->get('module'));
-        $validator = Validator::make(['module' => $module], [
-            'module' => 'required|exists:permissions,path',
+        $module = $request->get('module');
+        $validator = Validator::make($request->all(), [
+            'module' => 'required|exists:permissions,code',
         ]);
         if ($validator->fails()) {
             return ['status' => -2, 'msg' => $validator->errors()];
@@ -26,7 +26,7 @@ class FileController extends Controller
         $userId = Auth::user()->id;
         $permission = UserPermission
             ::whereHas('permission', function ($query) use ($module) {
-                $query->where('path', $module);
+                $query->where('code', $module);
             })
             ->where('user_id', $userId)
             ->first();

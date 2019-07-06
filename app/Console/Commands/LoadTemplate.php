@@ -14,6 +14,7 @@ class LoadTemplate extends Command
     protected $templates = [
         'empty',
         'simple-crud',
+        'sandbox',
         'crm',
         'cms',
     ];
