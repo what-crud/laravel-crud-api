@@ -10,7 +10,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::post('/logout', ['uses' => 'AuthController@logout', 'as' => 'auth.logout']);
 
     //  Middleware - authentication
-    Route::group(['middleware' => ['auth.jwt']], function () {
+    Route::group(['middleware' => 'api'], function () {
         Route::get('/user', ['uses' => 'AuthController@getUser', 'as' => 'auth.getUser']);
         Route::get('/user-permissions', ['uses' => 'AuthController@getUserPermissions', 'as' => 'auth.getUserPermissions']);
         Route::post('/user', ['uses' => 'AuthController@editUser', 'as' => 'auth.editUser'])->middleware('role:update');
@@ -29,7 +29,7 @@ Route::post('/demo/tasks/multiple-add', ['uses' => 'Demo\TasksController@multipl
 // Custom CRUD operations
 
 //  Middleware - authentication
-Route::group(['middleware' => ['auth.jwt']], function ($CRUD) {
+Route::group(['middleware' => 'api'], function ($CRUD) {
     
     // CRUD operations
     Route::get('/crud/{prefix}/{path}', ['uses' => 'CRUDcontroller@index']);
