@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Schema;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -20,15 +30,5 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('hash', function ($attribute, $value, $parameters, $validator) {
             return Hash::check($value, current($parameters));
         });
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 }
