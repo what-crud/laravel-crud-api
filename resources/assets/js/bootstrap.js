@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 
 /**
@@ -49,5 +48,7 @@ if (token) {
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
+//     key: 'your-pusher-key',
+//     cluster: 'mt1',
+//     encrypted: true
 // });
