@@ -3,9 +3,12 @@
 /public/storage
 /storage/*.key
 /vendor
-/.idea
-/.vagrant
+.env
+.env.backup
+.phpunit.result.cache
+.styleci.yml
+composer.lock
 Homestead.json
 Homestead.yaml
 npm-debug.log
-.env
+yarn-error.log
