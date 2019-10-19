@@ -5,7 +5,7 @@
 Laravel CRUD API is an API written using PHP and Laravel, dedicated to as a backend to the <a href="https://github.com/szczepanmasny/vue-crud">Vue CRUD</a> project. The project includes templates withmigrations, models and controllers associated with the Vue CRUD templates.
 
 ## Requirements
-- PHP 7.1.3+
+- PHP 7.x,
 - Composer
 
 ## Installation
@@ -22,7 +22,6 @@ composer install
 6. Type:
 ```
 php artisan key:generate
-php artisan jwt:secret
 ```
 7. Type:
 ```
