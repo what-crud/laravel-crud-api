@@ -11,8 +11,7 @@ trait ModelTreatment
 
         $rowsPerPage = $request->get('rowsPerPage');
         $sortBy = $request->get('sortBy');
-        $descending = $request->get('descending');
-        $direction = $descending == 'true' ? 'desc' : 'asc';
+        $sortDesc = $request->get('sortDesc');
         $search = $request->get('search');
         $searchPhrases = explode (" ", $search);
         $filterColumns = $request->get('filterColumns');
@@ -59,8 +58,11 @@ trait ModelTreatment
                 });
             }
         }
-        if($sortBy != null && $direction != null){
-            $model->orderBy($sortBy, $direction);
+        if($sortBy != null && $sortDesc != null){
+            for ($i = 0; $i < count($sortBy); $i++) {
+                $direction = $sortDesc[$i] == 'true' ? 'desc' : 'asc';
+                $model->orderBy($sortBy[$i], $direction);
+            }
         }
         else{
             $model->orderBy($defaultSortColumn, $defaultOrder);
