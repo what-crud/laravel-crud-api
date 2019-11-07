@@ -11,6 +11,7 @@ class CRUD
             'resources' => [
                 ['path' => 'messages', 'controller' => 'MessagesController', 'model' => 'App\Models\Cms\Message'],
                 ['path' => 'settings', 'controller' => 'SettingsController', 'model' => 'App\Models\Cms\Settings'],
+                ['path' => 'menu-items', 'controller' => 'MenuItemsController', 'model' => 'App\Models\Cms\MenuItem'],
             ],
         ],
         [
