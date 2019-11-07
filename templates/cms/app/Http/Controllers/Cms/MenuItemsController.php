@@ -15,8 +15,7 @@ class MenuItemsController extends Controller
 
     public function index()
     {
-        return MenuItem::orderBy('id', 'asc')
-            ->orderBy('parent_menu_item_id', 'asc')
+        return MenuItem::orderBy('order', 'asc')
             ->get();
     }
 }
