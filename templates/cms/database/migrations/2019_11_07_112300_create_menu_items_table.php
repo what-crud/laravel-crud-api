@@ -18,7 +18,7 @@ class CreateMenuItemsTable extends Migration
             $table->string('text');
             $table->string('path');
             $table->integer('parent_menu_item_id')->unsigned()->nullable();
-            $table->foreign('parent_menu_item_id')->references('id')->on('menu_items');
+            $table->foreign('parent_menu_item_id')->references('id')->on('menu_items')->onDelete('cascade');;
             $table->integer('order')->unsigned()->nullable();
             $table->boolean('active')->default(true);
         });
