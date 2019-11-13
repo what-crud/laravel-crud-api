@@ -28,7 +28,6 @@ class User extends Authenticatable
     public static $validator = [
         'name' => 'required|string|max:255',
         'email' => 'required|string|max:255|unique:users,email',
-        'login' => 'required|string|max:255|unique:users,login',
         'user_type_id' => 'exists:user_types,id',
         'active' => 'nullable',
     ];
