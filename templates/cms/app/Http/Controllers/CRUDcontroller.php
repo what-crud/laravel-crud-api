@@ -17,6 +17,17 @@ class CRUDcontroller extends Controller
         $this->middleware('role:insert', ['only' => ['store', 'multipleAdd']]);
         $this->middleware('role:update', ['only' => ['update', 'multipleUpdate',]]);
         $this->middleware('role:delete', ['only' => ['destroy', 'nultipleDelete']]);
+
+        $prefix = request()->route('prefix');
+
+        $CRUDresources = CRUD::$resources;
+        foreach ($CRUDresources as $module) {
+            if($module['prefix'] == $prefix){
+                if (array_key_exists('permission', $module)){
+                    $this->middleware('permission:' . $module['permission']);
+                }
+            }
+        }
     }
     private function isMethodAllowed($method, $prefix, $path)
     {        
@@ -29,10 +40,6 @@ class CRUDcontroller extends Controller
             if($module['prefix'] == $prefix){
 
                 $this->module = $module;
-
-                if (array_key_exists('permission', $module)){
-                    $this->middleware('permission:' . $module['permission']);
-                }
 
                 $resources = $module['resources'];
                 foreach ($resources as $resource) {

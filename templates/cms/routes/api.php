@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth.jwt']], function ($CRUD) {
         if(array_key_exists('prefix', $module)){
             $routeGroup['prefix'] = $module['prefix'];
         }
-        if(array_key_exists('middleware', $module)){
+        if(array_key_exists('permission', $module)){
             $routeGroup['middleware'] = ['permission:' . $module['permission']];
         }
         if(array_key_exists('namespace', $module)){
