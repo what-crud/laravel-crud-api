@@ -32,7 +32,7 @@ class CheckPermission
             }
         }
         if ($found){
-            return $next($request);
+            abort(403, 'You do not have access to this module');
         }else{
             abort(403, 'You do not have access to this module');
         }
